@@ -3,6 +3,7 @@
 # Export jetson nano jetpack utils paths
 . ./utils.sh
 
+# Variable to trace errors
 ERR=0
 
 # Linux4Tegra sources version is 32.7.3 by default
@@ -25,7 +26,7 @@ else
     echo "GCC Linaro toolchain already downloaded, skipping..."
 fi
 
-
+# Download Tegra sources
 if ! test -e $TEGRA_SOURCES
 then
     cd $JETPACK
@@ -35,8 +36,8 @@ else
     echo "TEGRA from tag tegra-l4t-r$L4T_VERSION sources already dowloaded, skipping..."
 fi
 
+# Check if requirements were installed successfully
 ERR=$?
-
 if [ $ERR -eq 0 ] 
 then
     echo "All requirements were installed successfully"
