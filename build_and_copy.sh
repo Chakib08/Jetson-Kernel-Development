@@ -18,6 +18,8 @@ make -C kernel/kernel-4.9/ ARCH=arm64 O=$TEGRA_KERNEL_OUT LOCALVERSION=-tegra CR
 # Install modules
 make -C kernel/kernel-4.9/ ARCH=arm64 O=$TEGRA_KERNEL_OUT LOCALVERSION=-tegra INSTALL_MOD_PATH=$KERNEL_MODULES_OUT modules_install
 
+ERR=$?
+
 # Check if Image and DTB were compiled
 if [ $ERR -eq 0 ] 
 then

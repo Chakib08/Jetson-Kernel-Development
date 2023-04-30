@@ -6,4 +6,4 @@ export TEGRA_SOURCES=$JETPACK/sources/
 export TOOLCHAIN_PREFIX=$CROSS_COMPILE_PATH/bin/aarch64-linux-gnu-
 export TEGRA_KERNEL_OUT=$JETPACK/build
 export KERNEL_MODULES_OUT=$JETPACK/modules
-export DTB=tegra210-p3448-0000-p3449-0000-a02.dtb
+export DTB=tegra210-p3448-0000-p3449-0000-b00.dtb
