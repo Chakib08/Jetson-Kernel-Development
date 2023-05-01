@@ -26,6 +26,52 @@ else
     echo "GCC Linaro toolchain already downloaded, skipping..."
 fi
 
+# Setup JetPack
+if ! test -e $JETPACK;
+then
+    # Create JetPack folder if missing
+    mkdir -p $JETPACK
+    
+    # Donwload L4T BSP
+    if ! test -e $BSP_ARCHIVE;
+    then
+        cd $HOME
+        echo "Downloading L4T BSP from $BSP_ARCHIVE_LINK"
+        wget $BSP_ARCHIVE_LINK
+    else
+        echo "L4T Driver Package (BSP) already downloaded, skipping..."
+    fi
+
+    if ! test -e $ROOFTS_ARCHIVE;
+    then
+        cd $HOME
+        echo "Downloading rootfs from $ROOFTS_LINK"
+        wget $ROOFTS_LINK
+
+else
+    echo "Jetpack folder already exisiting at path $JETPACK"
+fi
+
+# Extract BSP to JetPack folder
+if [ "$(ls -A $JETPACK)" ]; then
+    echo "L4T BSP is already existing in the JetPack folder"
+else
+    echo "Extracting L4T BSP to Jetpack foloder..."
+        tar -xvf $BSP_ARCHIVE --directory $JETPACK_PARENT
+    echo "L4T BSP copied successfully"
+fi
+
+# Extract BSP to JetPack folder
+sudo rm -rf $ROOTFS/README.txt
+if [ "$(ls -A $ROOTFS)" ]; then
+    echo "rootfs is already existing, skipping..."
+else
+    echo "Extracting $ROOFTS_ARCHIVE to $ROOTFS..."
+        sudo tar -xvf $ROOFTS_ARCHIVE --directory $ROOTFS
+    echo "Done"
+fi
+
+
 # Download Tegra sources
 if ! test -e $TEGRA_SOURCES
 then
@@ -38,7 +84,7 @@ fi
 
 # Check if requirements were installed successfully
 ERR=$?
-if [ $ERR -eq 0 ] 
+if [ $ERR -eq 0 ];
 then
     echo "All requirements were installed successfully"
 else
