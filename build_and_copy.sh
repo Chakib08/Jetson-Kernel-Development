@@ -32,11 +32,15 @@ fi
 # Copy kernel, device tree and modules into jetpack
 cd ${JETPACK}
 # Make a copy of the rootfs
-cp -rfv rootfs/ rootfs_orig/
+#cp -rfv rootfs/ rootfs_orig/
 # Copy kernel generated
 cp -rfv $JETPACK/build/arch/arm64/boot/Image kernel/
 # Copy device tree generated
-cp -rfv $JETPACK/build/arch/arm64/boot/dts/${DTB} kernel/dtb/
+if ! test -e $JETPACK/build/arch/arm64/boot/dts/${DTB}; then
+    cp -rfv $DTB_PATH kernel/dtb/
+else
+    cp -rfv $JETPACK/build/arch/arm64/boot/dts/${DTB} kernel/dtb/
+fi
 
 if [ $ERR -eq 0 ] 
 then
