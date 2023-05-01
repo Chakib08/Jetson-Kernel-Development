@@ -47,6 +47,7 @@ then
         cd $HOME
         echo "Downloading rootfs from $ROOFTS_LINK"
         wget $ROOFTS_LINK
+    fi
 
 else
     echo "Jetpack folder already exisiting at path $JETPACK"
@@ -71,7 +72,6 @@ else
     echo "Done"
 fi
 
-
 # Download Tegra sources
 if ! test -e $TEGRA_SOURCES
 then
@@ -82,10 +82,13 @@ else
     echo "TEGRA from tag tegra-l4t-r$L4T_VERSION sources already dowloaded, skipping..."
 fi
 
+# Apply binaries
+cd $JETPACK
+sudo ./apply_binaries.sh
+
 # Check if requirements were installed successfully
 ERR=$?
-if [ $ERR -eq 0 ];
-then
+if [ $ERR -eq 0 ]; then
     echo "All requirements were installed successfully"
 else
     echo "ERROR: One or more packages couldn't be installed"
