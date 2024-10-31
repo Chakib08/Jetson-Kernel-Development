@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# Function to check for errors after each command
 chkerr () {
     if [ $? -ne 0 ]; then
         if [ "$1" != "" ]; then
@@ -14,50 +15,110 @@ chkerr () {
     fi
 }
 
-# Export jetson nano jetpack utils paths
-echo "Source environment..."
+# Function to clean the build environment
+clean() {
+    echo "Cleaning build environment..."
+    make -C kernel/kernel-4.9/ ARCH=arm64 O=$TEGRA_KERNEL_OUT LOCALVERSION=-tegra CROSS_COMPILE=${TOOLCHAIN_PREFIX} clean
+    chkerr "ERROR: Failed to clean build environment"
+}
+
+# Function to compile the kernel
+compile_kernel() {
+    echo "Compiling kernel..."
+    make -C kernel/kernel-4.9/ ARCH=arm64 O=$TEGRA_KERNEL_OUT LOCALVERSION=-tegra CROSS_COMPILE=${TOOLCHAIN_PREFIX} -j8 --output-sync=target zImage
+    chkerr "ERROR: Kernel compilation failed"
+}
+
+# Function to compile kernel modules
+compile_modules() {
+    echo "Compiling kernel modules..."
+    make -C kernel/kernel-4.9/ ARCH=arm64 O=$TEGRA_KERNEL_OUT LOCALVERSION=-tegra CROSS_COMPILE=${TOOLCHAIN_PREFIX} -j8 --output-sync=target modules
+    chkerr "ERROR: Kernel modules compilation failed"
+}
+
+# Function to install kernel modules
+install_modules() {
+    echo "Installing kernel modules..."
+    make -C kernel/kernel-4.9/ ARCH=arm64 O=$TEGRA_KERNEL_OUT LOCALVERSION=-tegra INSTALL_MOD_PATH=$KERNEL_MODULES_OUT modules_install
+    chkerr "ERROR: Modules installation failed"
+}
+
+# Function to compile the device tree
+compile_device_tree() {
+    echo "Compiling device tree..."
+    make -C kernel/kernel-4.9/ ARCH=arm64 O=$TEGRA_KERNEL_OUT LOCALVERSION=-tegra CROSS_COMPILE=${TOOLCHAIN_PREFIX} -j8 --output-sync=target dtbs
+    chkerr "ERROR: Device tree compilation failed"
+}
+
+# Function to copy the compiled artifacts
+copy_artifacts() {
+    echo "Copying artifacts..."
+    cd ${JETPACK}
+    chkerr "ERROR: Failed to change directory to $JETPACK"
+
+    # Copy kernel image
+    if [ "$1" = "kernel" ] || [ "$1" = "all" ]; then
+        cp -rfv $JETPACK/build/arch/arm64/boot/Image kernel/
+        chkerr "ERROR: Failed to copy kernel image"
+    fi
+
+    # Copy device tree
+    if [ "$1" = "dtb" ] || [ "$1" = "all" ]; then
+        if ! test -e $JETPACK/build/arch/arm64/boot/dts/${DTB}; then
+            cp -rfv $DTB_PATH kernel/dtb/
+            chkerr "ERROR: Failed to copy device tree from DTB_PATH"
+        else
+            cp -rfv $JETPACK/build/arch/arm64/boot/dts/${DTB} kernel/dtb/
+            chkerr "ERROR: Failed to copy device tree from build path"
+        fi
+    fi
+    echo "Artifacts copied successfully for $1"
+}
+
+# Default to "all" if no argument is provided
+TARGET="${1:-all}"
+
+# Export Jetson Nano Jetpack utilities paths
 . ./utils.sh
 chkerr "ERROR: Failed to source utils.sh"
-echo "Source environment done"
 
-
-# Compile kernel and DTB
+# Execute based on the argument provided
 cd $TEGRA_SOURCES
-# Generate .config file that contains kernel configuration
-# make -C kernel/kernel-4.9/ ARCH=arm64 O=$TEGRA_KERNEL_OUT LOCALVERSION=-tegra CROSS_COMPILE=${TOOLCHAIN_PREFIX} tegra_defconfig
+chkerr "ERROR: Failed to change directory to $TEGRA_SOURCES"
 
-# Compile the kernel to generate Jetson's Image
-make -C kernel/kernel-4.9/ ARCH=arm64 O=$TEGRA_KERNEL_OUT LOCALVERSION=-tegra CROSS_COMPILE=${TOOLCHAIN_PREFIX} -j8 --output-sync=target zImage
-chkerr "ERROR: Kernel compilation failed"
+case "$TARGET" in
+    clean)
+        clean
+        ;;
+    
+    kernel)
+        compile_kernel
+        copy_artifacts "kernel"
+        ;;
+    
+    dtb)
+        compile_device_tree
+        copy_artifacts "dtb"
+        ;;
+    
+    modules)
+        compile_modules
+        install_modules
+        copy_artifacts "modules"
+        ;;
+    
+    all)
+        compile_kernel
+        compile_modules
+        install_modules
+        compile_device_tree
+        copy_artifacts "all"
+        ;;
+    
+    *)
+        echo "Invalid argument. Usage: $0 {clear|kernel|dtb|modules|all}" >&2
+        exit 1
+        ;;
+esac
 
-# Compile kernel modules
-make -C kernel/kernel-4.9/ ARCH=arm64 O=$TEGRA_KERNEL_OUT LOCALVERSION=-tegra CROSS_COMPILE=${TOOLCHAIN_PREFIX} -j8 --output-sync=target modules
-chkerr "ERROR: Kernel modules compilation failed"
-
-# Compile the device tree
-make -C kernel/kernel-4.9/ ARCH=arm64 O=$TEGRA_KERNEL_OUT LOCALVERSION=-tegra CROSS_COMPILE=${TOOLCHAIN_PREFIX} -j8 --output-sync=target dtbs
-# TODO: See why there is compilation error while compiling hardware/nvidia/platform/t19x/galen-industrial/kernel-dts/tegra194-p2888-0008-e3366-1199.dts
-#chkerr "ERROR: Device tree compilation failed"
-
-# Install modules
-make -C kernel/kernel-4.9/ ARCH=arm64 O=$TEGRA_KERNEL_OUT LOCALVERSION=-tegra INSTALL_MOD_PATH=$KERNEL_MODULES_OUT modules_install
-chkerr "ERROR: Modules installation failed"
-
-# Copy kernel, device tree and modules into jetpack
-cd ${JETPACK}
-# Make a copy of the rootfs
-#cp -rfv rootfs/ rootfs_orig/
-
-# Copy kernel generated
-cp -rfv $JETPACK/build/arch/arm64/boot/Image kernel/
-chkerr "ERROR: Failed to copy kernel image"
-
-# Copy device tree generated
-if ! test -e $JETPACK/build/arch/arm64/boot/dts/${DTB}; then
-    cp -rfv $DTB_PATH kernel/dtb/
-    chkerr "ERROR: Failed to copy device tree from DTB_PATH"
-else
-    cp -rfv $JETPACK/build/arch/arm64/boot/dts/${DTB} kernel/dtb/
-    chkerr "ERROR: Failed to copy device tree from build path"
-fi
-echo "Image and DTB were copied successfully"
+echo "Operation completed successfully for $TARGET"

@@ -3,8 +3,6 @@
 # Export jetson nano jetpack utils paths
 . ./utils.sh
 
-ERR=$?
-
 # Compile kernel and DTB
 cd $TEGRA_SOURCES
 # Generate .config file that contains kernel configuration
