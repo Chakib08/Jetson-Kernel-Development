@@ -22,7 +22,9 @@ This environment was tested with
 
 ## Prerequisites
 Run in a terminal the script below to install the environment requirements
-`cd $HOME/Jetson-Kernel-Development/` 
+
+`cd $HOME/Jetson-Kernel-Development/`
+
 `sh install_requirements.sh` 
 
 
@@ -32,11 +34,13 @@ Run in a terminal the script below to install the environment requirements
 Genereate the .config file by running
 
 `chmod a+x defconfig.sh`
+
 `./defconfig.sh`
 
 Apply your changes by disabling [] / enabling [*] drivers or mark the loadable modules [M]
 
 `chmod a+x menu_config.sh`
+
 `./menu_config.sh`
 
 
