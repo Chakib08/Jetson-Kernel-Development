@@ -1,4 +1,5 @@
 #!/bin/bash
+echo "Source Jetson Kernel Development environment..."
 
 export CROSS_COMPILE_PATH=$HOME/l4t-gcc/gcc-linaro-7.3.1-2018.05-x86_64_aarch64-linux-gnu/
 export JETPACK_PARENT=$HOME/nvidia/nvidia_sdk/JetPack_4.6.3_Linux_JETSON_NANO_TARGETS
@@ -15,3 +16,11 @@ export TEGRA_KERNEL_OUT=$JETPACK/build
 export KERNEL_MODULES_OUT=$JETPACK/modules
 export DTB=tegra210-p3448-0000-p3449-0000-b00.dtb
 export DTB_PATH=$JETPACK/build/arch/arm64/boot/dts/_ddot_/_ddot_/_ddot_/_ddot_/_ddot_/_ddot_/hardware/nvidia/platform/t210/porg/kernel-dts/tegra210-p3448-0000-p3449-0000-b00.dtb
+
+ERR=$?
+if [ $ERR -ne 0 ]; then
+    echo "ERROR: Source environment failed" >&2
+    exit $ERR
+fi
+
+echo "Source environment success"

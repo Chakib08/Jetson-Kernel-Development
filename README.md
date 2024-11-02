@@ -6,6 +6,7 @@ Jetson environment for kernel modules development
 - [Enviroment](#enviroment)
 - [Prerequisites](#prerequisites)
 - [How to build and customize the kernel](#How-to-build-and-customize-the-kernel)
+- [Copy binaries to Jetson](Copy-binaries-to-Jetson)
 - [Additional resources](#additional-resources)
 - [Changelog](#changelog)
 - [Known issues](#known-issues)
@@ -69,6 +70,37 @@ Run in a terminal the command below to build the kernel modules
 Run in a terminal the command below to build the device tree
 
 `./build_and_copy.sh dtb`
+
+## Copy binaries to Jetson
+
+## Copy Image and DTB (Device Tree Blob)
+Once you've build your custom kernel, you can copy both of the custom image and dtb by running the script below
+
+`./copy_img_dtb.sh <YOUR_JETSON_PROFILE>`
+
+## Copy a kernel object
+
+To copy a specific kernel module into your jetson board
+
+1. Source the evironment
+```
+cd $HOME/Jetson-Kernel-Development/scripts/
+source utils.sh
+cd $TEGRA_KERNEL_OUT/
+```
+
+2. Copy the kernel module to the jetson
+`scp $TEGRA_KERNEL_OUT/<PATH_TO_YOUR_KERNEL_MODULE> <YOUR_JETSON_PROFILE>@192.168.55.1:/home/<JETSON_PROFILE>/`
+
+3. Load the kernel module
+`ssh <YOUR_JETSON_PROFILE>@192.168.55.1`
+`sudo insmod <KERNEL_MODULE>.ko`
+
+4. Remove the module
+`sudo rmmod <KERNEL_MODULE>.ko`
+
+
+
 
 
 
