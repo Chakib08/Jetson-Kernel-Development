@@ -30,10 +30,12 @@ Run in a terminal the script below to install the environment requirements
 
 ### Configure the kernel
 Genereate the .config file by running
+
 `chmod a+x defconfig.sh`
 `./defconfig.sh`
 
 Apply your changes by disabling [] / enabling [*] drivers or mark the loadable modules [M]
+
 `chmod a+x menu_config.sh`
 `./menu_config.sh`
 
