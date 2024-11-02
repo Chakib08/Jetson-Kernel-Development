@@ -89,17 +89,20 @@ cd $TEGRA_KERNEL_OUT/
 ```
 
 2. Copy the kernel module to the jetson
-
-`scp $TEGRA_KERNEL_OUT/<PATH_TO_YOUR_KERNEL_MODULE> <YOUR_JETSON_PROFILE>@192.168.55.1:/home/<JETSON_PROFILE>/`
+```
+scp $TEGRA_KERNEL_OUT/<PATH_TO_YOUR_KERNEL_MODULE> <YOUR_JETSON_PROFILE>@192.168.55.1:/home/<JETSON_PROFILE>/
+```
 
 3. Load the kernel module
-
-`ssh <YOUR_JETSON_PROFILE>@192.168.55.1`
-`sudo insmod <KERNEL_MODULE>.ko`
+```
+ssh <YOUR_JETSON_PROFILE>@192.168.55.1
+sudo insmod <KERNEL_MODULE>.ko
+```
 
 4. Remove the module
-
-`sudo rmmod <KERNEL_MODULE>.ko`
+```
+sudo rmmod <KERNEL_MODULE>.ko
+```
 
 
 
