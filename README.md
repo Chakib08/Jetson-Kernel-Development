@@ -73,12 +73,12 @@ Run in a terminal the command below to build the device tree
 
 ## Copy binaries to Jetson
 
-## Copy Image and DTB (Device Tree Blob)
+### Copy Image and DTB (Device Tree Blob)
 Once you've build your custom kernel, you can copy both of the custom image and dtb by running the script below
 
 `./copy_img_dtb.sh <YOUR_JETSON_PROFILE>`
 
-## Copy a kernel object
+### Copy a kernel object
 
 To copy a specific kernel module into your jetson board
 1. Source the evironment
