@@ -6,7 +6,7 @@ Jetson environment for kernel modules development
 - [Enviroment](#enviroment)
 - [Prerequisites](#prerequisites)
 - [How to build and customize the kernel](#How-to-build-and-customize-the-kernel)
-- [Copy binaries to Jetson](Copy-binaries-to-Jetson)
+- [Copy binaries to Jetson](#Copy-binaries-to-Jetson)
 - [Additional resources](#additional-resources)
 - [Changelog](#changelog)
 - [Known issues](#known-issues)
