@@ -43,6 +43,15 @@ Apply your changes by disabling [] / enabling [*] drivers or mark the loadable m
 
 `./menu_config.sh`
 
+A GUI will be opened in your terminal
+
+![Menuconfig image](doc/imgs/menuconfig.png)
+
+You can browse through the menuconfig consol to see all the available drivers, you can find below nvidia overlays encoders, decoders and image sensor drivers
+
+![Menuconfig image](doc/imgs/menuconfig_nvidia_overlay.png)
+
+
 
 ### Build kernel
 
