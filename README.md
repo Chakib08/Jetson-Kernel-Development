@@ -4,9 +4,8 @@ Jetson environment for kernel modules development
 **Table Of Contents**
 - [Description](#description)
 - [Enviroment](#enviroment)
-- [How does this sample work?](#how-does-this-sample-work)
 - [Prerequisites](#prerequisites)
-- [Running the sample](#running-the-sample)
+- [How to build and customize the kernel](#How-to-build-and-customize-the-kernel)
 - [Additional resources](#additional-resources)
 - [Changelog](#changelog)
 - [Known issues](#known-issues)
@@ -23,7 +22,7 @@ This environment was tested with
 ## Prerequisites
 Run in a terminal the script below to install the environment requirements
 
-`cd $HOME/Jetson-Kernel-Development/`
+`cd $HOME/Jetson-Kernel-Development/scripts/`
 
 `sh install_requirements.sh` 
 
@@ -47,12 +46,30 @@ A GUI will be opened in your terminal
 
 ![Menuconfig image](doc/imgs/menuconfig.png)
 
-You can browse through the menuconfig consol to see all the available drivers, you can find below nvidia overlays encoders, decoders and image sensor drivers
+You can browse through the menuconfig console to see all the available drivers, you can find below nvidia overlays encoders, decoders and image sensor drivers
 
 ![Menuconfig image](doc/imgs/menuconfig_nvidia_overlay.png)
 
+### Clean environment
+Run in a terminal the command below to build the kernel
 
+`./build_and_copy.sh clean`
 
 ### Build kernel
+Run in a terminal the command below to build the kernel
+
+`./build_and_copy.sh kernel`
+
+### Build kernel modules
+Run in a terminal the command below to build the kernel modules
+
+`./build_and_copy.sh modules`
+
+### Build device tree
+Run in a terminal the command below to build the device tree
+
+`./build_and_copy.sh dtb`
+
+
 
 
