@@ -81,7 +81,6 @@ Once you've build your custom kernel, you can copy both of the custom image and 
 ## Copy a kernel object
 
 To copy a specific kernel module into your jetson board
-
 1. Source the evironment
 ```
 cd $HOME/Jetson-Kernel-Development/scripts/
@@ -90,13 +89,16 @@ cd $TEGRA_KERNEL_OUT/
 ```
 
 2. Copy the kernel module to the jetson
+
 `scp $TEGRA_KERNEL_OUT/<PATH_TO_YOUR_KERNEL_MODULE> <YOUR_JETSON_PROFILE>@192.168.55.1:/home/<JETSON_PROFILE>/`
 
 3. Load the kernel module
+
 `ssh <YOUR_JETSON_PROFILE>@192.168.55.1`
 `sudo insmod <KERNEL_MODULE>.ko`
 
 4. Remove the module
+
 `sudo rmmod <KERNEL_MODULE>.ko`
 
 
